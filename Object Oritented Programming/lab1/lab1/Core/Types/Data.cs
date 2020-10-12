@@ -48,7 +48,7 @@ namespace lab1.Core.Types
             }
         }
 
-        override public string ToString()// TODO ToString
+        override public string ToString()
         {
             string result="";
             foreach (KeyValuePair<string, Section> entry in _contents)

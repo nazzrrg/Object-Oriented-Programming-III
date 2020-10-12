@@ -45,7 +45,7 @@ namespace lab1.Core.Types
             return _sectionName;
         }
 
-        override public string ToString()// TODO ToString
+        override public string ToString()
         {
             string result = $"[{_sectionName}]\n";
             foreach(KeyValuePair<string,string> pair in _sectionContents)
