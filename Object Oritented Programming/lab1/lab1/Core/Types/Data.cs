@@ -24,11 +24,11 @@ namespace lab1.Core.Types
             }
         }
 
-        public T Get<T>(string SectionName, string PropertyName)
+        public T Get<T>(string sectionName, string propertyName)
         {
-            if (_contents.ContainsKey(SectionName))
+            if (_contents.ContainsKey(sectionName))
             {
-                var result = _contents[SectionName].Get(PropertyName);
+                var result = _contents[sectionName].Get(propertyName);
                 
                 try
                 {
@@ -40,21 +40,22 @@ namespace lab1.Core.Types
                 }
                 catch
                 {
-                    throw new ConversionErrorException("Conversion Error!");
+                    throw new ConversionErrorException($"Conversion Error! Cannot convert {sectionName} {propertyName} of {result.GetType()} to {typeof(T)}");
                 }
             } else
             {
-                throw new IncorrectSectionException($"Section {SectionName} not exist!");
+                throw new IncorrectSectionException($"Section {sectionName} not exist!");
             }
         }
 
-        public void Print()
+        override public string ToString()// TODO ToString
         {
+            string result="";
             foreach (KeyValuePair<string, Section> entry in _contents)
             {
-                entry.Value.Print();
-                Console.WriteLine();
+                result += entry.Value.ToString() + '\n';
             }
+            return result;
         }
     }
 }

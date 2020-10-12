@@ -45,13 +45,14 @@ namespace lab1.Core.Types
             return _sectionName;
         }
 
-        public void Print()
+        override public string ToString()// TODO ToString
         {
-            Console.WriteLine("[" + _sectionName + "]");
+            string result = $"[{_sectionName}]\n";
             foreach(KeyValuePair<string,string> pair in _sectionContents)
             {
-                Console.WriteLine(pair.Key+"="+pair.Value);
+                result += $"{pair.Key}={pair.Value}\n";
             }
+            return result;
         }
     }
 }

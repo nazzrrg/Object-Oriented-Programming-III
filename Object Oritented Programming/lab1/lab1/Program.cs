@@ -15,13 +15,13 @@ namespace lab1
                 iniReader reader = new iniReader();
                 IniParser parser = new IniParser();
 
-                Data data = parser.TryParse(reader.ReadFile("input.ini"));
+                Data data = parser.Parse(reader.ReadFile("input.ini"));
 
                 Console.Clear();
+                
+                Console.WriteLine(data.ToString());
 
-                data.Print();
-
-                Console.WriteLine("\nResults:\n");
+                Console.WriteLine("Results:\n");
                 Console.WriteLine("LEGACY_XML ListenTcpPort(int):");
                 Console.WriteLine(data.Get<int>("LEGACY_XML", "ListenTcpPort"));
                 Console.WriteLine("\nCOMMON DiskCachePath(string):");

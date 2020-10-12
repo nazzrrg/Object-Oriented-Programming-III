@@ -8,7 +8,7 @@ namespace lab1.Core
 {
     public class IniParser
     {
-        public Data TryParse(string[] strings)
+        public Data Parse(string[] strings)
         {
             Data data = new Data();
 
@@ -41,8 +41,10 @@ namespace lab1.Core
                     {
                         currentSection.Add(strArr[0], strArr[1]);
                     }
+                    continue;
                 }
 
+                throw new ParseFailureException($"Error while parsing. Invalid line: {s}");
             }
 
             if (count > 0)
@@ -64,7 +66,7 @@ namespace lab1.Core
 
         private static bool IsBlankLine(string test)
         {
-            return Regex.IsMatch(test, @"^\s+$");
+            return Regex.IsMatch(test, @"^\s*$");
         }
 
         private static bool IsCommentLine(string test)

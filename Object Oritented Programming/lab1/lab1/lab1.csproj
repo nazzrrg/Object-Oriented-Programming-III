@@ -45,6 +45,7 @@
     <Compile Include="Core\Exceptions\IncorrectFileExtensionException.cs" />
     <Compile Include="Core\iniReader.cs" />
     <Compile Include="Core\Exceptions\FileReadException.cs" />
+    <Compile Include="Core\Exceptions\ParseFailureException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="input.ini" />
