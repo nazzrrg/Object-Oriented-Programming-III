@@ -3,7 +3,7 @@ namespace lab1.Core.Exceptions
 {
     public class ConversionErrorException : Exception
     {
-        public ConversionErrorException()
+        public ConversionErrorException(string msg) : base(msg)
         {
         }
     }

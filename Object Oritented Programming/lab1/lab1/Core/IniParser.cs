@@ -14,13 +14,13 @@ namespace lab1.Core
 
             if (!File.Exists(filePath))
             {
-                throw new FileNonExistentException();
+                throw new FileNonExistentException($"File {filePath} does not exist");
             }
 
 
             if (Path.GetExtension(filePath) != ".INI" && Path.GetExtension(filePath) != ".ini")
             {
-                throw new IncorrectFileExtensionException();
+                throw new IncorrectFileExtensionException($"Extension {Path.GetExtension(filePath)} is not supported");
             }
 
             using (StreamReader sr = File.OpenText(filePath))

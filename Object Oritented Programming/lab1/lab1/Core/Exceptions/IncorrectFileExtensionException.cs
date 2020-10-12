@@ -3,7 +3,7 @@ namespace lab1.Core.Exceptions
 {
     public class IncorrectFileExtensionException : Exception
     {
-        public IncorrectFileExtensionException()
+        public IncorrectFileExtensionException(string msg) : base(msg)
         {
         }
     }

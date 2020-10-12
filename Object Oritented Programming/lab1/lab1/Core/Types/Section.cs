@@ -22,7 +22,7 @@ namespace lab1.Core.Types
                 _sectionContents.Add(key_, value_);
             } else
             {
-                throw new PropertyDuplicationException();
+                throw new PropertyDuplicationException($"Property {key_} already exists");
             }
         }
 
@@ -33,12 +33,12 @@ namespace lab1.Core.Types
                 return _sectionContents[key];
             } else
             {
-                throw new IncorrectPropertyException();
+                throw new IncorrectPropertyException($"Key {key} does not exist");
             }
         }
 
         public string this[string key] =>
-            _sectionContents.ContainsKey(key) ? _sectionContents[key] : throw new IncorrectPropertyException();
+            _sectionContents.ContainsKey(key) ? _sectionContents[key] : throw new IncorrectPropertyException($"Key {key} does not exist");
 
         public string GetName()
         {

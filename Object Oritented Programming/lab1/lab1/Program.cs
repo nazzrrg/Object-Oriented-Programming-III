@@ -10,22 +10,26 @@ namespace lab1
     {
         public static void Main(string[] args)
         {
-            IniParser parser = new IniParser();
+            try
+            {
+                IniParser parser = new IniParser();
 
-            Core.Types.Data data = parser.TryParse("input.ini");
-            Console.Clear();
+                Core.Types.Data data = parser.TryParse("input.ini");
+                Console.Clear();
 
+                data.Print();
 
-            data.Print();
-
-            Console.WriteLine("\nResults:\n");
-            Console.WriteLine("LEGACY_XML.ListenTcpPort(int):");
-            Console.WriteLine(data.Get<int>("LEGACY_XML", "ListenTcpPort"));
-            Console.WriteLine("\nCOMMON.DiskCachePath(string):");
-            Console.WriteLine(data.Get<string>("COMMON", "DiskCachePath"));
-            Console.WriteLine("\nADC_DEV.BufferLenSeconds(double):");
-            Console.WriteLine(data.Get<double>("ADC_DEV", "BufferLenSeconds"));
-
+                Console.WriteLine("\nResults:\n");
+                Console.WriteLine("LEGACY_XML ListenTcpPort(int):");
+                Console.WriteLine(data.Get<int>("LEGACY_XML", "ListenTcpPort"));
+                Console.WriteLine("\nCOMMON DiskCachePath(string):");
+                Console.WriteLine(data.Get<string>("COMMON", "DiskCachePath"));
+                Console.WriteLine("\nADC_DEV BufferLenSeconds(double):");
+                Console.WriteLine(data.Get<double>("ADC_DEV", "BufferLenSeconds"));
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }

@@ -3,7 +3,7 @@ namespace lab1.Core.Exceptions
 {
     public class FileNonExistentException : Exception
     {
-        public FileNonExistentException()
+        public FileNonExistentException(string msg) : base(msg)
         {
         }
     }

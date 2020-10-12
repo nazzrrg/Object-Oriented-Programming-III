@@ -20,7 +20,7 @@ namespace lab1.Core.Types
                 _contents.Add(key_, section_);
             } else
             {
-                throw new SectionDuplicationException();
+                throw new SectionDuplicationException($"Section {key_} already exists");
             }
         }
 
@@ -40,11 +40,11 @@ namespace lab1.Core.Types
                 }
                 catch
                 {
-                    throw new ConversionErrorException();
+                    throw new ConversionErrorException("Conversion Error!");
                 }
             } else
             {
-                throw new IncorrectSectionException();
+                throw new IncorrectSectionException($"Section {SectionName} not exist!");
             }
         }
 
