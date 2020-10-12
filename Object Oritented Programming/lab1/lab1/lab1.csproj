@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{2F89132F-0403-4F9E-A6D1-4F78B1291EA1}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>lab1</RootNamespace>
+    <AssemblyName>lab1</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ExternalConsole>true</ExternalConsole>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ExternalConsole>true</ExternalConsole>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Core\IniParser.cs" />
+    <Compile Include="Core\Types\Section.cs" />
+    <Compile Include="Core\Types\Data.cs" />
+    <Compile Include="Core\Exceptions\PropertyDuplicationException.cs" />
+    <Compile Include="Core\Exceptions\IncorrectPropertyException.cs" />
+    <Compile Include="Core\Exceptions\SectionDuplicationException.cs" />
+    <Compile Include="Core\Exceptions\IncorrectSectionException.cs" />
+    <Compile Include="Core\Exceptions\ConversionErrorException.cs" />
+    <Compile Include="Core\Exceptions\FileNonExistentException.cs" />
+    <Compile Include="Core\Exceptions\IncorrectFileExtensionException.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="input.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core\" />
+    <Folder Include="Core\Types\" />
+    <Folder Include="Core\Exceptions\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
