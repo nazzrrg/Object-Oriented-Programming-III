@@ -1,5 +1,5 @@
 ﻿using System;
-
+using lab1.Core.Types;
 using lab1.Core;
 
 
@@ -12,9 +12,11 @@ namespace lab1
         {
             try
             {
+                iniReader reader = new iniReader();
                 IniParser parser = new IniParser();
 
-                Core.Types.Data data = parser.TryParse("input.ini");
+                Data data = parser.TryParse(reader.ReadFile("input.ini"));
+
                 Console.Clear();
 
                 data.Print();

@@ -8,61 +8,46 @@ namespace lab1.Core
 {
     public class IniParser
     {
-        public Data TryParse(string filePath)
+        public Data TryParse(string[] strings)
         {
             Data data = new Data();
 
-            if (!File.Exists(filePath))
+            Section currentSection = new Section("1");
+
+            int count = 0;
+
+            foreach (string s in strings)
             {
-                throw new FileNonExistentException($"File {filePath} does not exist");
+                if (IsSectionHeader(s))
+                {
+                    if (count > 0)
+                    {
+                        data.Add(currentSection.GetName(), currentSection);
+                    }
+                    currentSection = new Section(s.Replace("]", "").Replace("[", ""));
+                    count++;
+                    continue;
+                }
+
+                if (IsCommentLine(s) || IsBlankLine(s)) continue;
+
+                var strArr = s.Split("=;".ToCharArray(), 3, StringSplitOptions.RemoveEmptyEntries);
+
+                if (strArr.Length > 1)
+                {
+                    strArr[0] = strArr[0].Trim();
+                    strArr[1] = strArr[1].Trim();
+                    if (IsFieldName(strArr[0]) && IsValidValue(strArr[1]))
+                    {
+                        currentSection.Add(strArr[0], strArr[1]);
+                    }
+                }
+
             }
 
-
-            if (Path.GetExtension(filePath) != ".INI" && Path.GetExtension(filePath) != ".ini")
+            if (count > 0)
             {
-                throw new IncorrectFileExtensionException($"Extension {Path.GetExtension(filePath)} is not supported");
-            }
-
-            using (StreamReader sr = File.OpenText(filePath))
-            {
-                string s;
-                int count = 0;
-
-                Section currentSection = new Section("1");
-
-                while ((s = sr.ReadLine()) != null)
-                {
-                    if(IsSectionHeader(s))
-                    {
-                        s = s.Replace("]", "").Replace("[", "");
-                        if (count > 0)
-                        {
-                            data.Add(currentSection.GetName(), currentSection);
-                        }
-                        currentSection = new Section(s);
-                        count++;
-                        continue;
-                    }
-
-                    if (IsCommentLine(s) || IsBlankLine(s)) continue;
-
-                    var strArr = s.Split("=;".ToCharArray(), 3, StringSplitOptions.RemoveEmptyEntries);
-
-                    if (strArr.Length > 1)
-                    {
-                        strArr[0] = strArr[0].Trim();
-                        strArr[1] = strArr[1].Trim();
-                        if (IsFieldName(strArr[0]) && IsValidValue(strArr[1]))
-                        {
-                            currentSection.Add(strArr[0], strArr[1]);
-                        }
-                    }
-
-                }
-                if (count > 0)
-                {
-                    data.Add(currentSection.GetName(), currentSection);
-                }
+                data.Add(currentSection.GetName(), currentSection);
             }
             return data;
         }
