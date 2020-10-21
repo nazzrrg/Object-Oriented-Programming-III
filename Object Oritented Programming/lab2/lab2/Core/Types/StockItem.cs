@@ -1,12 +1,14 @@
 ﻿namespace lab2.Core.Types
 {
-    public class StockItemInfo
+    public class StockItem
     {
         public int Qty;
         public decimal Price;
+        public Product Product;
 
-        public StockItemInfo(int qty, decimal price)
+        public StockItem(Product product, int qty, decimal price)
         {
+            Product = product;
             Qty = qty;
             Price = price;
         }

@@ -25,5 +25,10 @@ namespace lab2.Core.Types
         {
             return Id.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return $"{Name}({Id})";
+        }
     }
 }

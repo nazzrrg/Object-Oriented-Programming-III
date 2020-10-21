@@ -9,7 +9,7 @@ namespace lab2.Core.Types
         public int Id { get; }
         public string Name { get; }
         public string Address { get; }
-        private readonly Dictionary<Product, StockItemInfo> _stock = new Dictionary<Product, StockItemInfo>();
+        private readonly List<StockItem> _stock = new List<StockItem>();
 
         public Shop(int id, string name, string address)
         {
@@ -20,23 +20,27 @@ namespace lab2.Core.Types
 
         public void Add(Product product, int qty, decimal atPrice) // assuming price will change
         {
-            //if (!_stock.FirstOrDefault(x => x.Key.Id == product.Id).Equals(default))
-            if (!_stock.ContainsKey(product))
+            var stockItem = _stock.FirstOrDefault(x => x.Product.Equals(product));
+            
+            if (stockItem is null)
             {
-                _stock.Add(product, new StockItemInfo(qty, atPrice));
+                _stock.Add(new StockItem(product, qty, atPrice));
             } else
             {
-                _stock[product].Qty += qty;    
-                _stock[product].Price = atPrice;
+                stockItem.Qty += qty;    
+                stockItem.Price = atPrice;
             }
         }
         public void Add(Product product, int qty)
         {
-            if (!_stock.ContainsKey(product))
+            var stockItem = _stock.FirstOrDefault(x => x.Product.Equals(product));
+            
+            if (stockItem is null)
             {
-                throw new Exception($"Error: Failed to add new product to shop {Id}, product price is unspecified!");
+                throw new Exception($"Error: Failed to add new product {product} to shop {Name}({Id}), product price is unspecified!");
             }
-            _stock[product].Qty += qty;
+            
+            stockItem.Qty += qty;
         }
 
         public bool TryBuy(Product product, int qty, out decimal sum)
@@ -54,23 +58,24 @@ namespace lab2.Core.Types
 
         public decimal Buy(Product product, int qty)
         {
-            //if (!_stock.FirstOrDefault(x => x.Key.Id == product.Id).Equals(default))
-            if (!_stock.ContainsKey(product))
+            var stockItem = _stock.FirstOrDefault(x => x.Product.Equals(product));
+            
+            if (stockItem is null)
             {
-                throw new Exception($"Error no product {product.Name}({product.Id}) in shop {Name}({Id})");
+                throw new Exception($"Error: No product {product}) in shop {Name}({Id})!");
             }
-            if (_stock[product].Qty < qty)
+            if (stockItem.Qty < qty)
             {
-                throw new Exception($"Error not enough {product.Name}({product.Id}) in stock in shop {Name}({Id}). Requested: {qty}, available: {_stock[product].Qty}");
+                throw new Exception($"Error: Not enough {product} in stock in shop {Name}({Id})!");
             }
 
-            _stock[product].Qty -= qty;
+            stockItem.Qty -= qty;
 
-            var orderSum = qty * _stock[product].Price;
+            var orderSum = qty * stockItem.Price;
 
-            if (_stock[product].Qty == 0)
+            if (stockItem.Qty == 0)
             {
-                _stock.Remove(product);
+                _stock.Remove(stockItem);
             }
 
             return orderSum;
@@ -78,27 +83,31 @@ namespace lab2.Core.Types
 
         public decimal GetPrice(Product product)
         {
-            //if (!_stock.FirstOrDefault(x => x.Key.Id == product.Id).Equals(default))
-            if (!_stock.ContainsKey(product))
+            var stockItem = _stock.FirstOrDefault(x => x.Product.Equals(product));
+            
+            if (stockItem is null)
             {
-                throw new Exception($"Error no product {product.Name}({product.Id}) in shop {Name}({Id})");
+                throw new Exception($"Error: No product {product} in shop {Name}({Id})!");
             }
-            return _stock[product].Price;
+            
+            return stockItem.Price;
         }
 
         public int GetQty(Product product)
         {
-            //if (!_stock.FirstOrDefault(x => x.Key.Id == product.Id).Equals(default))
-            if (!_stock.ContainsKey(product))
+            var stockItem = _stock.FirstOrDefault(x => x.Product.Equals(product));
+            
+            if (stockItem is null)
             {
-                throw new Exception($"Error no product {product.Name}({product.Id}) in shop {Name}({Id})");
+                throw new Exception($"Error: No product ({product}) in shop {Name}({Id})");
             }
-            return _stock[product].Qty;
+            
+            return stockItem.Qty;
         }
 
         public List<Product> GetAvailableProducts()
         {
-            return _stock.Select(x => x.Key).ToList();
+            return _stock.Select(x => x.Product).ToList();
         }
 
         public override bool Equals(object obj)
@@ -121,7 +130,7 @@ namespace lab2.Core.Types
 
             foreach (var item in _stock)
             {
-                resultString += $"{item.Key.Id.ToString()}\t{item.Key.Name}\t{item.Value.Qty}\t{item.Value.Price}\n";
+                resultString += $"{item.Product.Id}\t{item.Product.Name}\t{item.Qty}\t{item.Price}\n";
             }
             
             return resultString;

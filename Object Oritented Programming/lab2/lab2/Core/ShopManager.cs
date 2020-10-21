@@ -32,45 +32,50 @@ namespace lab2.Core
 
         public void AddStock(Shop shop, Product product, int qty, decimal atPrice = -1)
         {
-            if (!_shopList.Contains(shop))
+            var shopFromList = _shopList.FirstOrDefault(x => x.Equals(shop));
+            if (shopFromList is null)
             {
-                throw new Exception($"Error: Unable to add stock to shop id={shop.Id}, shop does not exist!");
+                throw new Exception($"Error: Unable to add stock to shop {shop.Name}({shop.Id}), shop does not exist!");
             }
 
-            if (!_productList.Contains(product))
+            var productFromList = _productList.FirstOrDefault(x => x.Equals(product));
+            if (productFromList is null)
             {
-                throw new Exception($"Error: Unable to add product id={product.Id} to shop id={shop.Id}, product does not exist!");
+                throw new Exception($"Error: Unable to add product {product} to shop {shop.Name}({shop.Id}), product does not exist!");
             }
 
             if (qty < 1)
             {
-                throw new Exception($"Error: Unable to add negative or 0 quantity of product id={product.Id} to shop id={shop.Id}!");
+                throw new Exception($"Error: Unable to add negative or 0 quantity of product {product} to shop {shop.Name}({shop.Id})!");
             }
 
             if (atPrice == -1)
             {
-                _shopList.First(x => x.Equals(shop)).Add(_productList.First(x => x.Equals(product)), qty);
+                shopFromList.Add(productFromList, qty);
             } else
             {
-                _shopList.First(x => x.Equals(shop)).Add(_productList.First(x => x.Equals(product)), qty, atPrice);
+                shopFromList.Add(productFromList, qty, atPrice);
             }
         }
 
         public Shop GetShopWhereCheapest(Product product)
         {
             Shop cheapestShop = null;
-            decimal lowestPrice = -1;
+            decimal lowestPrice = Decimal.MaxValue;
 
             foreach(Shop shop in _shopList)
             {
-                if (shop.GetAvailableProducts().FirstOrDefault(x => x.Equals(product)).Equals(default))
+                if (shop.GetAvailableProducts().FirstOrDefault(x => x.Equals(product)) is null)
                 {
-                    if (shop.GetPrice(product) < lowestPrice)
-                    {
-                        lowestPrice = shop.GetPrice(product);
-                        cheapestShop = shop;
-                    }
+                    continue;
                 }
+            
+                if (shop.GetPrice(product) < lowestPrice)
+                {
+                    lowestPrice = shop.GetPrice(product);
+                    cheapestShop = shop;
+                }
+            
             }
 
             return cheapestShop;
@@ -78,14 +83,15 @@ namespace lab2.Core
 
         public List<(Product product, int qty)> CalculatePossiblePurchaseByMaxOrderSum(Shop shop, decimal maxOrderSum)
         {
-            if (!_shopList.Contains(shop))
+            var shopFromList = _shopList.FirstOrDefault(x => x.Equals(shop)); 
+            if (shopFromList is null)
             {
-                throw new Exception($"Error: Unable to calculate purchase in shop id={shop.Id}, shop does not exist!");
+                throw new Exception($"Error: Unable to calculate purchase in shop {shop.Name}({shop.Id}), shop does not exist!");
             }
 
             var possibleOrders = new List<(Product product, int qty)>();
 
-            foreach (var product in shop.GetAvailableProducts())
+            foreach (var product in shopFromList.GetAvailableProducts())
             {
                 var singleItemPrice = shop.GetPrice(product);
                 var availableQty = shop.GetQty(product);
@@ -104,26 +110,28 @@ namespace lab2.Core
         public bool TryBuyFromShop(Shop shop, Product product, int qty, out decimal orderSum)
         {
             orderSum = 0;
-            if (_shopList.Contains(shop) && _productList.Contains(product))
-            {
-                if (_shopList.First(x => x.Equals(shop)).TryBuy(_productList.First(x => x.Equals(product)), qty, out decimal sum))
-                {
-                    orderSum = sum;
-                    return true;
-                } else
-                {
-                    return false;
-                }
-            } else
+
+            var shopFromList = _shopList.FirstOrDefault(x => x.Equals(shop));
+            var productFromList = _productList.FirstOrDefault(x => x.Equals(product));
+            if (shopFromList is null || productFromList is null)
+            {    
+                return false;
+            }
+
+            if (!shopFromList.TryBuy(productFromList, qty, out decimal sum))
             {
                 return false;
             }
+            
+            orderSum = sum;
+            return true;
         }
+    
 
-        public Shop GetCheapestDealForOrderList(List<(Product product, int qty)> orderList)
+        public Shop GetCheapestShopForOrderList(List<(Product product, int qty)> orderList)
         {
             Shop cheapestShop = null;
-            decimal lowestOrderSum = Decimal.MaxValue;
+            var lowestOrderSum = Decimal.MaxValue;
 
             foreach(var shop in _shopList)
             {
@@ -132,7 +140,8 @@ namespace lab2.Core
 
                 foreach(var orderListElement in orderList)
                 {
-                    if (orderListElement.qty <= shop.GetQty(orderListElement.product))
+                    if (!(shop.GetAvailableProducts().FirstOrDefault(x => x.Equals(orderListElement.product)) is null) &&
+                        orderListElement.qty <= shop.GetQty(orderListElement.product))
                     {
                         orderSum += shop.GetPrice(orderListElement.product) * orderListElement.qty;
                     } else

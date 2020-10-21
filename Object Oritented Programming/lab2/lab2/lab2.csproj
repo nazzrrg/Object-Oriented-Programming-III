@@ -35,12 +35,11 @@
     <Compile Include="Core\Types\Product.cs" />
     <Compile Include="Core\Types\Shop.cs" />
     <Compile Include="Core\ShopManager.cs" />
-    <Compile Include="Core\Types\StockItemInfo.cs" />
+    <Compile Include="Core\Types\StockItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\" />
     <Folder Include="Core\Types\" />
-    <Folder Include="Core\Abstractions\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

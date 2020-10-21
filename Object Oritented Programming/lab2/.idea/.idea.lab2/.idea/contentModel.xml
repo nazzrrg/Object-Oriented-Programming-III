@@ -5,12 +5,11 @@
       <e p="lab2" t="IncludeRecursive">
         <e p="bin" t="ExcludeRecursive" />
         <e p="Core" t="Include">
-          <e p="Abstractions" t="Include" />
           <e p="ShopManager.cs" t="Include" />
           <e p="Types" t="Include">
             <e p="Product.cs" t="Include" />
             <e p="Shop.cs" t="Include" />
-            <e p="StockItemInfo.cs" t="Include" />
+            <e p="StockItem.cs" t="Include" />
           </e>
         </e>
         <e p="lab2.csproj" t="IncludeRecursive" />
